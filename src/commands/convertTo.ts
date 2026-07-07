@@ -1,10 +1,10 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { convertPandoc } from '../services/pandocService';
+import { PandocService } from '../services/pandocService';
 import { resolveFileUri } from "../utils/resolveUri";
 
-export async function convertTo(uri?: vscode.Uri) {
+export async function convertTo(pandocService: PandocService, uri?: vscode.Uri) {
     console.log('convertFromMarkdown');
 
     const targetUri = await resolveFileUri(uri);
@@ -28,7 +28,7 @@ export async function convertTo(uri?: vscode.Uri) {
     const outputFile = path.join(inputPath.dir, `${inputPath.name}${selectedFormat}`);
     
     try {
-        await convertPandoc(inputFile, outputFile);
+        await pandocService.convertPandoc(inputFile, outputFile);
 
         vscode.window.showInformationMessage(`DMB: \'${path.basename(inputFile)}\' convert to \'${path.basename(outputFile)}\'`);
     }

@@ -1,9 +1,9 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { convertPandoc } from '../services/pandocService';
+import { PandocService } from '../services/pandocService';
 
-export async function saveAsDocx(uri: vscode.Uri) {
+export async function saveAsDocx(pandocService: PandocService, uri: vscode.Uri) {
     console.log("saveAsDocx", uri.fsPath);
     
     const mdFilePath = uri.fsPath;
@@ -15,7 +15,7 @@ export async function saveAsDocx(uri: vscode.Uri) {
     const docxFilePath = mdFilePath.replace(/\.md$/, "");
     
     try {
-        await convertPandoc(mdFilePath, docxFilePath);
+        await pandocService.convertPandoc(mdFilePath, docxFilePath);
 
         vscode.window.showInformationMessage(`DME: \'${path.basename(mdFilePath)}\' saved as \'${path.basename(docxFilePath)}\'`);
     }
