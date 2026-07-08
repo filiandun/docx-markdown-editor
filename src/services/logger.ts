@@ -30,10 +30,17 @@ export class Logger {
 
 
     public notifyInfo(message: string) {
+        this.info(message);
         vscode.window.showInformationMessage(`${this.BASE_PREFIX} ${message}`);
+    }
+
+    public notifyWarn(message: string) {
+        this.warn(message);
+        vscode.window.showWarningMessage(`${this.BASE_PREFIX} ${message}`);
     }
     
     public notifyError(message: string) {
+        this.error(message);
         vscode.window.showErrorMessage(`${this.BASE_PREFIX} ${message}`);
     }
 

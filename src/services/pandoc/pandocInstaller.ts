@@ -9,7 +9,7 @@ import extract from 'extract-zip';
 
 import { execFile } from 'child_process';
 
-import { Logger } from './logger';
+import { Logger } from '../logger';
 import { getExecutable, getFolder, getDownloadUrl } from './pandocConfig';
 
 
@@ -21,7 +21,7 @@ export class PandocInstaller {
     private readonly platform: NodeJS.Platform;
     private readonly arch: string;
 
-
+    
     constructor(logger: Logger, context: vscode.ExtensionContext) {
         this.logger = logger;
 

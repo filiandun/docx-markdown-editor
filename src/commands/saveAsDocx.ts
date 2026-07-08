@@ -1,10 +1,14 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { PandocService } from '../services/pandocService';
+import { Logger } from '../services/logger';
+import { PandocService } from '../services/pandoc/pandocService';
 
-export async function saveAsDocx(pandocService: PandocService, uri: vscode.Uri) {
-    console.log("saveAsDocx", uri.fsPath);
+import { getErrorMessage } from '../utils/errorHelper';
+
+
+export async function saveAsDocx(logger: Logger, pandocService: PandocService, uri: vscode.Uri) {
+    logger.info(`Command 'saveAsDocx'`);
     
     const mdFilePath = uri.fsPath;
     
@@ -15,11 +19,11 @@ export async function saveAsDocx(pandocService: PandocService, uri: vscode.Uri) 
     const docxFilePath = mdFilePath.replace(/\.md$/, "");
     
     try {
-        await pandocService.convertPandoc(mdFilePath, docxFilePath);
+        await pandocService.convertMdToDocx(mdFilePath, docxFilePath);
 
-        vscode.window.showInformationMessage(`DME: \'${path.basename(mdFilePath)}\' saved as \'${path.basename(docxFilePath)}\'`);
+        logger.info(`\'${path.basename(mdFilePath)}\' saved as \'${path.basename(docxFilePath)}\'`);
     }
-    catch (err: any) {
-        vscode.window.showErrorMessage(`DME: Error: ${err.message || err}`);
+    catch (error) {
+        logger.notifyError(getErrorMessage(error));        
     }
 }

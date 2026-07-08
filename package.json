@@ -2,8 +2,8 @@
   "name": "docx-markdown-editor",
   "displayName": "Docx Markdown Editor",
   "publisher": "filian",
-  "description": "Convert DOCX files to Markdown and sync edits back to DOCX in VS Code.",
-  "version": "0.0.3",
+  "description": "Preview DOCX files directly in VS Code, edit them as Markdown, and automatically synchronize changes back to the original .docx using Pandoc.",
+  "version": "1.0.0",
   "license": "MIT",
   "icon": "media/icon.png",
   "repository": {
@@ -24,6 +24,18 @@
   ],
   "main": "./dist/extension.js",
   "contributes": {
+    "customEditors": [
+            {
+                "viewType": "docxMarkdownEditor.preview",
+                "displayName": "DOCX Preview",
+                "selector": [
+                    {
+                        "filenamePattern": "*.docx"
+                    }
+                ],
+                "priority": "default"
+            }
+        ],
     "commands": [
       {
         "command": "docx.openAsMarkdown",
@@ -47,7 +59,7 @@
         },
         {
           "command": "docx.convertTo",
-          "when": "resourceExtname == .md || resourceExtname == .docx || resourceExtname == .html",
+          "when": "resourceExtname == .md || resourceExtname == .docx || resourceExtname == .html || resourceExtname == .epub",
           "group": "navigation"
         },
         {

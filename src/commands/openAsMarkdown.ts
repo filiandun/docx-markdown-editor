@@ -1,33 +1,40 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 
-import { PandocService } from '../services/pandocService';
-import { resolveFileUri } from '../utils/resolveUri';
+import { Logger } from '../services/logger';
+import { PandocService } from '../services/pandoc/pandocService';
 
-export async function openAsMarkdown(pandocService: PandocService, uri?: vscode.Uri) {
-    console.log('openAsMarkDown');
+import { resolveFileUri } from '../utils/resolveUri';
+import { getErrorMessage } from '../utils/errorHelper';
+
+
+export async function openAsMarkdown(logger: Logger, pandocService: PandocService, uri?: vscode.Uri) {
+    logger.info(`Command 'openAsMarkDown'`);
     
     const targetUri = await resolveFileUri(uri);
-    if (!targetUri) { return; }
+    if (!targetUri) { 
+        logger.warn(`No target file selected.\n`);
+        return; 
+    }
 
     if (!targetUri.fsPath.toLowerCase().endsWith('.docx')) {
-        vscode.window.showErrorMessage('DME: Open as Markdown only works with .docx files');
+        logger.notifyWarn(`Command 'Open as Markdown' works only with .docx files`);
         return;
     }
     
-    const docxFilePath = targetUri!.fsPath;
+    const docxFilePath = targetUri.fsPath;
     const mdFilePath = docxFilePath + ".md";
 
     try {
-        await pandocService.convertPandoc(docxFilePath, mdFilePath);
+        await pandocService.convertDocxToMd(docxFilePath, mdFilePath);
 
         const mdFileUri = vscode.Uri.file(mdFilePath);
 
         await vscode.commands.executeCommand('vscode.open', mdFileUri);
 
-        vscode.window.showInformationMessage(`DME: \'${path.basename(docxFilePath)}\' open as \'${path.basename(mdFilePath)}\'`);
+        logger.info(`\'${path.basename(docxFilePath)}\' open as \'${path.basename(mdFilePath)}\'`);
     }
-    catch (err: any) {
-        vscode.window.showErrorMessage(`DME: Error: ${err.message || err}`);
+    catch (error) {
+        logger.notifyError(getErrorMessage(error));
     }
 }

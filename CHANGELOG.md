@@ -24,3 +24,34 @@ This project follows the general structure recommended by Keep a Changelog.
 ### Changed
 
 - Update icon
+
+## [0.0.3] - 2026-05-07
+
+### Changed
+
+- Update README.md
+
+## [1.0.0] - 2026-07-08
+
+- Preview `.docx` files directly in VS Code
+- Automatic preview refresh when the source `.docx` changes
+- Automatic download and installation of Pandoc
+- Output channel logging
+- Round-trip editing with embedded image preservation (`.docx` ⇄ `.md`)
+- Automatic registration of `.docx` files with the custom preview editor
+
+### Changed
+
+- Improved Pandoc integration
+- Refactored conversion and preview pipeline
+- Improved overall stability and error handling
+- Reworked document conversion workflow for better reliability
+- Improved HTML preview rendering
+
+### Fixed
+
+- Fixed image loss when converting `.docx` → `.md` → `.docx`
+- Fixed image handling during document conversions
+- Fixed relative resource paths for generated Markdown files
+- Fixed preview updates after document changes
+- Fixed temporary file cleanup
