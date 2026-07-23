@@ -55,3 +55,9 @@ This project follows the general structure recommended by Keep a Changelog.
 - Fixed relative resource paths for generated Markdown files
 - Fixed preview updates after document changes
 - Fixed temporary file cleanup
+
+## [1.0.1] - 2026-07-23
+
+### Fixed
+
+- Fixed automatic download and installation of Pandoc on Linux and MacOS platforms

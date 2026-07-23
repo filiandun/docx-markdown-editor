@@ -1,6 +1,6 @@
 import path from 'path';
 
-import { execFile } from 'child_process';
+import { execFile, ExecFileException } from 'child_process';
 
 
 export class PandocService {
@@ -58,8 +58,20 @@ export class PandocService {
 		return new Promise((resolve, reject) => {
 			execFile(this.pandocPath, args, { windowsHide: true, cwd }, (error, _stdout, stderr) => {
 				if (error) {
-					reject(new Error(stderr || error.message));
-					return;
+					const execError = error as ExecFileException;
+
+					switch (execError.code) {
+						case "ENOENT": 
+							reject(new Error("Pandoc executable was not found. It may have been removed after installation. Try to restart the extension."));
+							break;
+
+						case "EACCES":
+							reject(new Error(`Pandoc executable '${this.pandocPath}' - permission denied.`));
+							break;
+							
+						default: 
+							reject(new Error(stderr || error.message));
+					}
 				}
 				resolve();
 			});

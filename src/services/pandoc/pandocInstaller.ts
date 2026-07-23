@@ -7,10 +7,15 @@ import * as vscode from 'vscode';
 import * as tar from "tar";
 import extract from 'extract-zip';
 
-import { execFile } from 'child_process';
+import { promisify } from "node:util";
+import { execFile } from "node:child_process";
 
 import { Logger } from '../logger';
-import { getExecutable, getFolder, getDownloadUrl } from './pandocConfig';
+
+import { getErrorMessage } from '../../utils/errorHelper';
+import { getPathPandoc as getPandocPath, getDownloadUrl } from './pandocConfig';
+
+const execFileAsync = promisify(execFile);
 
 
 export class PandocInstaller {
@@ -73,11 +78,24 @@ export class PandocInstaller {
         const pandocExecutable = this.getPandocExecutablePath();
 
         try {
-            await fs.access(pandocExecutable);
+            this.logger.info("Verifying Pandoc installation");
+            await this.verifyPandoc(pandocExecutable);
+            this.logger.info("Verification completed.\n");
 
             return pandocExecutable;
         } catch {
+            this.logger.info("Verification failed.\n");
+            
             return null;
+        }
+    }
+
+    private async verifyPandoc(pandocExecutable: string): Promise<void> {
+        try {
+            await execFileAsync(pandocExecutable, ["--version"]);
+        }
+        catch (error) {
+            throw new Error(`Pandoc verification failed: ${getErrorMessage(error)}`);
         }
     }
 
@@ -103,6 +121,10 @@ export class PandocInstaller {
         const pandocExecutable = this.getPandocExecutablePath();
         this.logger.info(`Pandoc executable: ${pandocExecutable}.\n`);
 
+        this.logger.info("Verifying Pandoc installation");
+        await this.verifyPandoc(pandocExecutable);
+        this.logger.info("Verification completed.\n");
+
         return pandocExecutable;
     }
     
@@ -125,9 +147,8 @@ export class PandocInstaller {
     }
 
     private getPandocExecutablePath(): string {
-        return path.join(this.storagePath, getFolder(), getExecutable(this.platform));
+        return path.join(this.storagePath, getPandocPath(this.platform));
     }
-
 
     private async downloadFile(url: string, destination: string): Promise<void> {
         const response = await fetch(url);

@@ -3,17 +3,18 @@
   "displayName": "Docx Markdown Editor",
   "publisher": "filian",
   "description": "Preview DOCX files directly in VS Code, edit them as Markdown, and automatically synchronize changes back to the original .docx using Pandoc.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "license": "MIT",
   "icon": "media/icon.png",
   "repository": {
     "type": "git",
-    "url": "https://github.com/filiandun/docx-markdown-bridge.git"
+    "url": "https://github.com/filiandun/docx-markdown-editor.git"
   },
   "engines": {
     "vscode": "^1.116.0"
   },
   "categories": [
+    "Formatters",
     "Other"
   ],
   "activationEvents": [

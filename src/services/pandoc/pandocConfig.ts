@@ -2,12 +2,8 @@ import path from "path";
 
 export const PANDOC_VERSION = "3.10";
 
-export function getExecutable(platform: NodeJS.Platform): string {
-    return platform === "win32" ? "pandoc.exe" : "pandoc";
-}
-
-export function getFolder(): string {
-    return `pandoc-${PANDOC_VERSION}`;
+export function getPathPandoc(platform: NodeJS.Platform): string {
+    return platform === "win32" ? path.join(`pandoc-${PANDOC_VERSION}`, 'pandoc') : path.join(`pandoc-${PANDOC_VERSION}`, 'bin', 'pandoc');
 }
 
 
